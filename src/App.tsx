@@ -1,25 +1,15 @@
-import React, { Component } from 'react';
+import * as React from 'react';
+import { Route, Switch } from 'react-router-dom';
+import Loading from './components/elements/Loading';
+import Layout from './components/Layout';
+const Home = React.lazy(() => import('./components/Home'));
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <p>
-            Edit <code>src/App.tsx</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
-}
-
-export default App;
+export default () => (
+    <Layout>
+        <React.Suspense fallback={<Loading padding='p-5' margin='m-3' />}>
+            <Switch>
+                <Route exact path='/' component={Home} />
+            </Switch>
+        </React.Suspense>
+    </Layout>
+);
