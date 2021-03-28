@@ -1,9 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import '../styles/jobview.scss';
 import Header from './Header';
 import icon from "../styles/7274846.png";
+import { connect } from 'react-redux';
+import { Job } from './JobCards';
+import { Redirect } from 'react-router-dom';
+interface JobViewProps {
+  jobSelected: Job
+}
 
-export const JobView: React.FC = () => {
+export const JobView: React.FC<JobViewProps> = ({
+  jobSelected,
+}) => {
+
+  if (!jobSelected) {
+    return <Redirect exact to="/" />;
+  }
+
   return <>
     <div className="job-view">
       <div className="container-fluid pb-5">
@@ -24,12 +37,14 @@ export const JobView: React.FC = () => {
             <div className="col-md-9">
               <div className="card-body">
                 <div className="row p-3">
-                  <h3 className="col-lg-8 col-md-8 col-xs-12 card-title p-0">Company Name</h3>
-                  <a href="#" className="col-auto btn btn-outline-primary">Company Site</a>
+                  {jobSelected.company &&
+                    <h3 className="col-lg-8 col-md-8 col-xs-12 card-title p-0">{jobSelected.company}</h3>
+                  }
+                  <a href={jobSelected.url} className="col-auto btn btn-outline-primary">Company Site</a>
                 </div>
 
                 <p className="card-text">
-                  <div className="text-muted">placeholdersite.com</div>
+                  <div className="text-muted">{jobSelected.url}</div>
                 </p>
               </div>
             </div>
@@ -39,7 +54,7 @@ export const JobView: React.FC = () => {
           <div className="card-body p-5">
             <div className="row p-3">
               <h3 className="col-lg-9 col-md-9 col-xs-12 card-title p-0">
-                <span>Software Engineer</span>
+                <span>{jobSelected.title}</span>
                 <ul className="tags">
                   <li><a href="#" className="tag">HTML</a></li>
                   <li><a href="#" className="tag">CSS</a></li>
@@ -92,4 +107,11 @@ export const JobView: React.FC = () => {
   </>;
 }
 
-export default JobView;
+const mapStateToProps = (state: any) => ({
+  jobSelected: state.get("jobSelected")
+});
+
+const mapDispatchToProps = {
+};
+
+export default connect(mapStateToProps as any, mapDispatchToProps)(JobView);

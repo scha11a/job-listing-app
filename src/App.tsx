@@ -9,7 +9,7 @@ export default () => (
     <Layout>
         <React.Suspense fallback={<Loading padding='p-5' margin='m-3' />}>
             <Switch>
-                <Route exact path='/' component={Home} />
+                <Route exact path='/' component={Home} history={history} />
                 <Route path="/job-view" component={JobView} />
             </Switch>
         </React.Suspense>
