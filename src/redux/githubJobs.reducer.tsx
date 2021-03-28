@@ -42,6 +42,18 @@ export default (state: iMap<string, {}> = initialState, action: any) => {
             console.log(`${fn}. Reducer: %s.  Pl: `, actions.SET_JOB, payload);
             return state.set('jobSelected', payload);
 
+        case actions.SET_LOCATION:
+            console.log(`${fn}. Reducer: %s.  Pl: `, actions.SET_LOCATION, payload);
+            return state.set('currentLocation', payload);
+
+        case actions.SET_LOCATION_KEYWORDS:
+            console.log(`${fn}. Reducer: %s.  Pl: `, actions.SET_LOCATION_KEYWORDS, payload);
+            return state.set('locationKeywords', payload);
+
+        case actions.SET_JOB_KEYWORDS:
+            console.log(`${fn}. Reducer: %s.  Pl: `, actions.SET_JOB_KEYWORDS, payload);
+            return state.set('jobKeywords', payload);
+
         default:
             return state;
     }

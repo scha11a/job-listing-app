@@ -13,27 +13,25 @@ import * as actions from './githubJobs.actions';
 // *********************************************************
 // *****                  Redux Sagas                  *****
 // *********************************************************
-interface RequestParams {
-
-};
-export function* getGithubJobsGenerator(action: RequestParams) {
+export function* getGithubJobsGenerator(action: any) {
     console.log(`getGithubJobsGenerator`, action);
 
     try {
-        const results = yield api.githubJobsAPI();
+        yield put(actions.getGithubJobsFail(false));
+        const results = yield api.githubJobsAPI(action.payload);
         console.log(`Results: `, results);
 
-        if (results) {
+        if (results && results.data && results.data.length > 0) {
             yield put(actions.getGithubJobsSuccess(results.data));
-        } else {
-            yield put(actions.getGithubJobsFail(results));
+        } else if (results.data && results.data.length === 0) {
+            yield put(actions.getGithubJobsFail(true));
         }
 
     }
     catch (err) {
         console.error(err);
 
-        yield put(actions.getGithubJobsFail(err));
+        yield put(actions.getGithubJobsFail(true));
     }
 }
 

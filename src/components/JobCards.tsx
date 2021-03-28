@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { setJob } from '../redux/githubJobs.actions';
@@ -7,6 +7,7 @@ import '../styles/home.scss';
 interface JobCardsProps {
     jobs: Array<Job>;
     setJob: Function;
+    loadMore?: number;
     history: any;
 }
 
@@ -27,8 +28,17 @@ export interface Job {
 export const JobCards: React.FC<JobCardsProps> = ({
     jobs,
     history,
+    loadMore,
     setJob
 }) => {
+
+    const [cardLimit, setCardLimit] = useState<number>(12);
+
+    useEffect(() => {
+        if (loadMore) {
+            setCardLimit(loadMore * 12);
+        }
+    }, [loadMore]);
 
     const timeDiff = (created_at: string) => {
         const createdTime = new Date(created_at);
@@ -44,33 +54,38 @@ export const JobCards: React.FC<JobCardsProps> = ({
     };
 
     return <>
-        {jobs.map((job, key) =>
-            <div key={key} className="col-xl-3 col-sm-6 col-12 mt-5">
-                {job.company_logo && <img className="hat" src={job.company_logo} alt="hat" />}
-                <div className="card">
-                    <div className="card-content">
-                        <div className="card-body">
-                            <div className="media d-flex">
-                                <div className="align-self-center">
-                                    <i className="icon-pencil primary font-large-2 float-left"></i>
-                                </div>
-                                <div className="media-body text-left">
-                                    <p className="pt-3">{timeDiff(job.created_at)} hrs ago. {job.type}</p>
-                                    <div className="text-decoration-none">
-                                        <div className="h4 job-title" onClick={() => {
-                                            setJob(job);
-                                            history.push("/job-view")
-                                        }}>{job.title}</div>
+        {jobs.map((job, key) => {
+            if (key < cardLimit) {
+                return (
+                    <div key={key} className="col-xl-3 col-sm-6 col-12 mt-5">
+                        {job.company_logo && <img className="hat" src={job.company_logo} alt="hat" />}
+                        <div className="card">
+                            <div className="card-content">
+                                <div className="card-body">
+                                    <div className="media d-flex">
+                                        <div className="align-self-center">
+                                            <i className="icon-pencil primary font-large-2 float-left"></i>
+                                        </div>
+                                        <div className="media-body text-left">
+                                            <p className="pt-3">{timeDiff(job.created_at)} hrs ago. {job.type}</p>
+                                            <div className="text-decoration-none">
+                                                <div className="h4 job-title" onClick={() => {
+                                                    setJob(job);
+                                                    history.push("/job-view")
+                                                }}>{job.title}</div>
+                                            </div>
+                                            {job.company && <span>{job.company}</span>}
+                                            <br />
+                                            <p className="pt-4 mb-0 small">{job.location}</p>
+                                        </div>
                                     </div>
-                                    {job.company && <span>{job.company}</span>}
-                                    <br />
-                                    <p className="pt-4 mb-0">{job.location}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>)
+                )
+            }
+        })
         }
     </>;
 }
