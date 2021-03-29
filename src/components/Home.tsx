@@ -3,10 +3,11 @@ import { connect } from 'react-redux';
 
 import Header from './Header';
 import JobCards from './JobCards';
-import { getGithubJobsRequest, setJobKeywords, setLocation, setLocationKeywords } from '../redux/githubJobs.actions';
+import { getGithubJobsRequest, setJobKeywords, setLocation, setLocationKeywords, setDarkTheme } from '../redux/githubJobs.actions';
 
 import '../styles/home.scss';
 import Loading from './elements/Loading';
+import classNames from 'classnames';
 
 export const Home: React.FC<any> = ({
   jobs,
@@ -18,7 +19,9 @@ export const Home: React.FC<any> = ({
   currentLocation,
   locationKeywords,
   jobKeywords,
-  jobsError
+  jobsError,
+  setDarkTheme,
+  darkTheme
 }) => {
 
   console.log("props", jobs, history,
@@ -26,7 +29,8 @@ export const Home: React.FC<any> = ({
     currentLocation,
     locationKeywords,
     jobKeywords,
-    jobsError
+    jobsError,
+    darkTheme
   );
 
   const [loading, setLoading] = useState<boolean>(true);
@@ -95,14 +99,13 @@ export const Home: React.FC<any> = ({
       console.log("Location:", currentLocation);
     }
   }, [currentLocation]);
-
   return (
-    <div className="App">
+    <div className={classNames({ 'App': !darkTheme }, { 'App-dark': darkTheme })}>
       <div className="home">
         <div className="grey-bg container-fluid pb-5">
-          <Header />
+          <Header darkTheme={darkTheme} setDarkTheme={setDarkTheme} />
           <section className="search-sec container">
-            <div className="row card">
+            <div className={classNames("row shadow-sm", { 'card': !darkTheme }, { 'card-dark': darkTheme })}>
               <div className="col-lg-12 p-3">
                 <div className="row">
                   <div className="col-lg-4 col-md-4 col-sm-12">
@@ -137,7 +140,7 @@ export const Home: React.FC<any> = ({
           <section className="container">
             {loading && <Loading padding='p-5' margin='m-3' />}
             <div className="row">
-              {!jobsError && jobs && <JobCards jobs={jobs} history={history} loadMore={loadMore} />}
+              {!jobsError && jobs && <JobCards jobs={jobs} history={history} loadMore={loadMore} darkTheme={darkTheme} />}
               {jobsError &&
                 <div className="row mx-auto">No search results found, please retry</div>
               }
@@ -162,14 +165,16 @@ const mapStateToProps = (state: any) => ({
   currentLocation: state.get("currentLocation"),
   locationKeywords: state.get("locationKeywords"),
   jobKeywords: state.get("jobKeywords"),
-  jobsError: state.get("jobsError")
+  jobsError: state.get("jobsError"),
+  darkTheme: state.get("darkTheme")
 });
 
 const mapDispatchToProps = {
   getGithubJobsRequest,
   setJobKeywords,
   setLocationKeywords,
-  setLocation
+  setLocation,
+  setDarkTheme
 };
 
 export default connect(mapStateToProps as any, mapDispatchToProps)(Home);

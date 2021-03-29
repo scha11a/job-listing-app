@@ -54,6 +54,10 @@ export default (state: iMap<string, {}> = initialState, action: any) => {
             console.log(`${fn}. Reducer: %s.  Pl: `, actions.SET_JOB_KEYWORDS, payload);
             return state.set('jobKeywords', payload);
 
+        case actions.SET_DARK_THEME:
+            console.log(`${fn}. Reducer: %s.  Pl: `, actions.SET_DARK_THEME, payload);
+            return state.set('darkTheme', payload);
+
         default:
             return state;
     }

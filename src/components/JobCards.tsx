@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -9,6 +10,7 @@ interface JobCardsProps {
     setJob: Function;
     loadMore?: number;
     history: any;
+    darkTheme: boolean;
 }
 
 export interface Job {
@@ -29,7 +31,8 @@ export const JobCards: React.FC<JobCardsProps> = ({
     jobs,
     history,
     loadMore,
-    setJob
+    setJob,
+    darkTheme
 }) => {
 
     const [cardLimit, setCardLimit] = useState<number>(12);
@@ -59,7 +62,7 @@ export const JobCards: React.FC<JobCardsProps> = ({
                 return (
                     <div key={key} className="col-xl-3 col-sm-6 col-12 mt-5">
                         {job.company_logo && <img className="hat" src={job.company_logo} alt="hat" />}
-                        <div className="card">
+                        <div className={classNames("row shadow-sm", { 'card': !darkTheme }, { 'card-dark': darkTheme })}>
                             <div className="card-content">
                                 <div className="card-body">
                                     <div className="media d-flex">

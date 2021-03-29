@@ -4,12 +4,18 @@ import Header from './Header';
 import { connect } from 'react-redux';
 import { Job } from './JobCards';
 import { Link, Redirect } from 'react-router-dom';
+import { setDarkTheme } from "../redux/githubJobs.actions";
+import classNames from 'classnames';
 interface JobViewProps {
   jobSelected: Job
+  setDarkTheme: Function;
+  darkTheme: boolean;
 }
 
 export const JobView: React.FC<JobViewProps> = ({
   jobSelected,
+  setDarkTheme,
+  darkTheme
 }) => {
 
   useEffect(() => {
@@ -26,10 +32,10 @@ export const JobView: React.FC<JobViewProps> = ({
   return <>
     <div className="job-view">
       <div className="container-fluid pb-5">
-        <Header />
+        <Header darkTheme={darkTheme} setDarkTheme={setDarkTheme} />
       </div>
       <section className="container job-view-card">
-        <div className="card mb-3 w-75 mx-auto">
+        <div className={classNames("mb-3 w-75 mx-auto", { 'card': !darkTheme }, { 'card-dark': darkTheme })}>
           <div className="row g-0">
             <div className="col-md-3">
               <div className="mh-100">
@@ -46,7 +52,7 @@ export const JobView: React.FC<JobViewProps> = ({
                   {jobSelected.company &&
                     <h3 className="col-lg-8 col-md-8 col-xs-12 card-title p-0">{jobSelected.company}</h3>
                   }
-                  <a href={jobSelected.company_url ? jobSelected.company_url : jobSelected.url} target="_blank" rel="noopener noreferrer" className="col-auto btn btn-outline-primary">Company Site</a>
+                  <a href={jobSelected.company_url ? jobSelected.company_url : jobSelected.url} target="_blank" rel="noopener noreferrer" className={`col-auto btn btn-outline-primary ${darkTheme && "btn-dark"}`}>Company Site</a>
                 </div>
 
                 <p className="card-text">
@@ -56,7 +62,7 @@ export const JobView: React.FC<JobViewProps> = ({
             </div>
           </div>
         </div>
-        <div className="card w-75 mx-auto">
+        <div className={classNames("w-75 mx-auto", { 'card': !darkTheme }, { 'card-dark': darkTheme })}>
           <div className="card-body p-5">
             <div className="row p-3">
               <h3 className="col-lg-9 col-md-9 col-xs-12 card-title p-0">
@@ -65,13 +71,13 @@ export const JobView: React.FC<JobViewProps> = ({
                   <li><a href="#" className="tag">{jobSelected.company}</a></li>
                 </ul>
               </h3>
-              <a href={jobSelected.company_url ? jobSelected.company_url : jobSelected.url} target="_blank" rel="noopener noreferrer" className="col-auto btn btn-primary h-100">Apply now</a>
+              <a href={jobSelected.company_url ? jobSelected.company_url : jobSelected.url} target="_blank" rel="noopener noreferrer" className={`col-auto btn btn-primary ${darkTheme && "btn-dark"} h-100`}>Apply now</a>
             </div>
             <p className="card-text" dangerouslySetInnerHTML={{ __html: jobSelected.description }}>
             </p>
           </div>
         </div>
-        <div className="card w-75 mx-auto mt-3">
+        <div className={classNames("w-75 mx-auto mt-3", { 'card': !darkTheme }, { 'card-dark': darkTheme })}>
           <div className="card-body p-5">
             <p className="card-text" dangerouslySetInnerHTML={{ __html: jobSelected.how_to_apply }}>
             </p>
@@ -83,10 +89,12 @@ export const JobView: React.FC<JobViewProps> = ({
 }
 
 const mapStateToProps = (state: any) => ({
-  jobSelected: state.get("jobSelected")
+  jobSelected: state.get("jobSelected"),
+  darkTheme: state.get("darkTheme")
 });
 
 const mapDispatchToProps = {
+  setDarkTheme
 };
 
 export default connect(mapStateToProps as any, mapDispatchToProps)(JobView);

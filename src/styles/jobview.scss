@@ -1,5 +1,12 @@
 .job-view {
 
+  .card-dark {
+    background-color: #7f7f7f;
+    color: white;
+  }
+  .card-dark .text-muted{
+      color: white !important;
+    }
 .company-logo {
   width: 80%;
   position: absolute;
